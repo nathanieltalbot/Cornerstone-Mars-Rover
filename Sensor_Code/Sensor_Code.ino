@@ -39,20 +39,41 @@ long lastSecond;  //Millisecond counter to see when a second goes by
 
 void setup() {
   
-  //Setup 
+
+  //Blue and green status LEDs
+  pinMode(STAT_BLUE, OUTPUT); 
+  pinMode(STAT_GREEN, OUTPUT); 
+
+  pinMode(REFERENCE_3V3, INPUT);  //Reference voltage input
+  pinMode(LIGHT, INPUT);  //Light Sensor input
+
+  //Pressure Sensor Configuration
+  myPressure.begin(); // Get sensor online
+  myPressure.setModeBarometer(); // Measure pressure in Pascals from 20 to 110 kPa
+  myPressure.setOversampleRate(7); // Set Oversample to the recommended 128
+  myPressure.enableEventFlags(); // Enable all three pressure and temp event flags
+
+  //Configure humidity sensor
+  myHumidity.begin();
+
+  //Set up time readout
+  lastSecond = millis();
+
+  //Setup for the LCD Readout (Temporary for the 3/26 iteration of the prototype)
+
   lcd.begin(16, 2);
   lcd.clear();
 
   lcd.setCursor(0,0);
-  lcd.print("Welcome!")
+  lcd.print("Welcome!");
   delay(1000);
-  lcd.clear();
 }
 
 void loop() {
 
   //Read out Alcohol Level
   int mq3_value = analogRead(mq3_analogPin);
+  lcd.clear();
   lcd.setCursor(0,0);
   lcd.print("Alcohol Level");
 
@@ -63,12 +84,52 @@ void loop() {
   delay(4000);
 
   //Read out Temperature
+  lcd.clear();
   lcd.setCursor(0,0);
   lcd.print("Temperature");
 
-  //Read out Pressure
+  lcd.setCursor(0,1);
+  float temp_h = myHumidity.getTempF();
+  lcd.print(temp_h, 2);
+  lcd.print(" F");
+  
+  delay(4000);
 
- 
+  //Read out humidity
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("Humidity:");
+  
+  float humidity = myHumidity.getRH();
+  lcd.setCursor(0,1);
+  lcd.print(humidity);
+  lcd.print("%");
+  
+  delay(4000);
+
+  //Read out pressure
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("Pressure:");
+
+  lcd.setCursor(0,1);
+  float pressure = myPressure.readPressure();
+  lcd.print(pressure);
+  lcd.print(" Pa");
+
+  delay(4000);
+  
+  //Read out light level
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("Light Level");
+
+  lcd.setCursor(0,1);
+  float light_lvl = get_light_level();
+  lcd.print(light_lvl);
+  lcd.print(" V");
+  
+  delay(4000);
 
   
 
