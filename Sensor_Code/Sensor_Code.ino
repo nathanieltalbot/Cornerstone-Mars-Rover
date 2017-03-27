@@ -69,6 +69,7 @@ void setup() {
   delay(1000);
 }
 
+//Loop function reads out alcohol, temperature, humidity, pressure, light level readings onto LCD
 void loop() {
 
   //Read out Alcohol Level
@@ -130,8 +131,6 @@ void loop() {
   lcd.print(" V");
   
   delay(4000);
-
-  
 
 }
 
