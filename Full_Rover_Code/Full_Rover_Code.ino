@@ -42,9 +42,14 @@ Servo servo_L;
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 long lastSecond;  //Millisecond counter to see when a second goes by
 
-
-
-
+/*
+THIS CODE IS INACTIVE, AS IT RELIES ON THE IR SENSOR'S VALUES TO WORK
+PLAY ##   //IR value for play, moves rover forward
+REW ##    //IR value for rewind, turns rover left
+FF ##     //IR value for fast forward, turs rover right
+PAUSE ##  //IR value for pause, moves rover backward
+STOP ##   //IR value stop, stops rover
+*/
 
 void setup() {
   
@@ -69,10 +74,13 @@ void setup() {
   lastSecond = millis();
 
   //Setup for the LCD Readout (Temporary for the 3/26 iteration of the prototype)
-
   lcd.begin(16, 2);
   lcd.clear();
 
+  //Set up servo motors to pins
+  servo_R.attach(6).;
+  servo_L.attach(7);
+  
   lcd.setCursor(0,0);
   lcd.print("Welcome!");
   delay(1000);
@@ -143,7 +151,7 @@ void loop() {
 
 }
 
-//FUNCTION FOR THE LIGHT LEVEL SENSOR
+//Function for the light level sensor
 
 float get_light_level()
 {
