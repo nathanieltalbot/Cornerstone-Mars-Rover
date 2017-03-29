@@ -27,7 +27,7 @@ Weather myHumidity;     //instance of humidity sensor
 //const byte STAT_BLUE = 7;
 //const byte STAT_GREEN = 8;
 
-//const byte REFERENCE_3V3 = A3;
+const byte REFERENCE_3V3 = A3;
 const byte LIGHT = A1;
 
 int mq3_analogPin = A0;   //A0 is the analog pin for the MQ-3 Sensor
@@ -58,7 +58,7 @@ void setup() {
   //pinMode(STAT_BLUE, OUTPUT); 
   //pinMode(STAT_GREEN, OUTPUT); 
 
-  //pinMode(REFERENCE_3V3, INPUT);  //Reference voltage input
+  pinMode(REFERENCE_3V3, INPUT);  //Reference voltage input
   pinMode(LIGHT, INPUT);  //Light Sensor input
 
   //Pressure Sensor Configuration
@@ -78,7 +78,7 @@ void setup() {
   lcd.clear();
 
   //Set up servo motors to pins
-  servo_R.attach(6).;
+  servo_R.attach(6);
   servo_L.attach(7);
   
   lcd.setCursor(0,0);

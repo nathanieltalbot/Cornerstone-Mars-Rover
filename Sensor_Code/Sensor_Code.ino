@@ -1,7 +1,7 @@
 stat/*
 Nathaniel Talbot
 GE 1502 Cornerstone of Engineering 2
-Northeaster University, Boston, MA
+Northeastern University, Boston, MA
 2017
 
 
@@ -22,7 +22,7 @@ Weather myHumidity;     //instance of humidity sensor
 //const byte STAT_BLUE = 7;
 //const byte STAT_GREEN = 8;
 
-//const byte REFERENCE_3V3 = A3;
+const byte REFERENCE_3V3 = A3;
 const byte LIGHT = A1;
 
 int mq3_analogPin = A0;   //A0 is the analog pin for the MQ-3 Sensor
@@ -44,7 +44,7 @@ void setup() {
   //pinMode(STAT_BLUE, OUTPUT); 
   //pinMode(STAT_GREEN, OUTPUT); 
 
-  //pinMode(REFERENCE_3V3, INPUT);  //Reference voltage input
+  pinMode(REFERENCE_3V3, INPUT);  //Reference voltage input
   pinMode(LIGHT, INPUT);  //Light Sensor input
 
   //Pressure Sensor Configuration
