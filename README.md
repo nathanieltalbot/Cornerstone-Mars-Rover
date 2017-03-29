@@ -12,7 +12,7 @@ The Sparkfun RedBoard Pinout is as follows:
 | A0  | B1 Pin on MQ-3 Sensor |
 | A1  | Light Sensor          |
 | A2  | None                  |
-| A3  | None (3V3 Reference)  |
+| A3  | 3V3 Reference         |
 | A4  | None                  |
 | A5  | None                  |
 | 2   | LCD                   |
