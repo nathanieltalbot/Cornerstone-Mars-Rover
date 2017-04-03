@@ -40,7 +40,10 @@ Servo servo_L;
 
 // GLOBAL VARIABLES
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-long lastSecond;  //Millisecond counter to see when a second goes by
+long previousMillis = 0;  //Stores last time sensors were used
+
+long interval = 10000;  //interval for reading data
+
 
 /*
 THIS CODE IS INACTIVE, AS IT RELIES ON THE IR SENSOR'S VALUES TO WORK
@@ -70,8 +73,6 @@ void setup() {
   //Configure humidity sensor
   myHumidity.begin();
 
-  //Set up time readout
-  lastSecond = millis();
 
   //Setup for the LCD Readout (Temporary for the 3/26 iteration of the prototype)
   lcd.begin(16, 2);
@@ -89,6 +90,10 @@ void setup() {
 //Loop function reads out alcohol, temperature, humidity, pressure, light level readings onto LCD
 void loop() {
 
+  unsigned long currentMillis = millis();   //read current time
+
+  if (current Millis - previousMillis > interval) {
+    
   //Read out Alcohol Level
   int mq3_value = analogRead(mq3_analogPin);
   lcd.clear();
@@ -149,12 +154,8 @@ void loop() {
   
   delay(4000);
 
-  /*
-   THE FOLLOWING CODE IS FOR THE SERVOS, CONTROLLED BY REMOTE. IT IS INACTIVE
+  }
 
-   
-    
-   */
 }
 
 //Function for the light level sensor
