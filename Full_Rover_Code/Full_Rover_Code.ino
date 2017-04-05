@@ -19,6 +19,13 @@ Northeastern University, Boston, MA
 
 #include <Servo.h>  //library for servo motors to move the robot
 
+//Libraties for IR Sensor
+#include <boarddefs.h>
+#include <IRremote.h>
+#include <IRremoteInt.h>
+#include <ir_Lego_PF_BitStreamEncoder.h>
+
+
 MPL3115A2 myPressure;   //instance of pressure sensor
 Weather myHumidity;     //instance of humidity sensor
 
@@ -32,17 +39,24 @@ const byte LIGHT = A1;
 
 int mq3_analogPin = A0;   //A0 is the analog pin for the MQ-3 Sensor
 
+int RECV_PIN = 8;     //Pin for IR Sensor
+
 LiquidCrystal lcd(12,11,5,4,3,2);
 
 //declare servo objects
 Servo servo_R;
 Servo servo_L;
 
+//Set up IR Receiver
+IRrecv irrecv(RECV_PIN);
+decode_results results;
+
+
 // GLOBAL VARIABLES
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 long previousMillis = 0;  //Stores last time sensors were used
 
-long interval = 10000;  //interval for reading data
+long interval = 10000;  //interval for reading data, 10 seconds
 
 
 /*
@@ -78,6 +92,9 @@ void setup() {
   lcd.begin(16, 2);
   lcd.clear();
 
+  //Set up IR Receiver
+  irrecv.enableIRIn(); 
+  
   //Set up servo motors to pins
   servo_R.attach(6);
   servo_L.attach(7);
@@ -92,67 +109,68 @@ void loop() {
 
   unsigned long currentMillis = millis();   //read current time
 
-  if (current Millis - previousMillis > interval) {
+  //if statement 
+  if (currentMillis - previousMillis > interval) {
+  
+    //Read out Alcohol Level
+    int mq3_value = analogRead(mq3_analogPin);
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Alcohol Level");
+  
+    lcd.setCursor(0,1);
+  
+    lcd.print(mq3_value);
+  
+    delay(4000);
+  
+    //Read out Temperature
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Temperature");
+  
+    lcd.setCursor(0,1);
+    float temp_h = myHumidity.getTempF();
+    lcd.print(temp_h, 2);
+    lcd.print(" F");
     
-  //Read out Alcohol Level
-  int mq3_value = analogRead(mq3_analogPin);
-  lcd.clear();
-  lcd.setCursor(0,0);
-  lcd.print("Alcohol Level");
-
-  lcd.setCursor(0,1);
-
-  lcd.print(mq3_value);
-
-  delay(4000);
-
-  //Read out Temperature
-  lcd.clear();
-  lcd.setCursor(0,0);
-  lcd.print("Temperature");
-
-  lcd.setCursor(0,1);
-  float temp_h = myHumidity.getTempF();
-  lcd.print(temp_h, 2);
-  lcd.print(" F");
+    delay(4000);
   
-  delay(4000);
-
-  //Read out humidity
-  lcd.clear();
-  lcd.setCursor(0,0);
-  lcd.print("Humidity:");
+    //Read out humidity
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Humidity:");
+    
+    float humidity = myHumidity.getRH();
+    lcd.setCursor(0,1);
+    lcd.print(humidity);
+    lcd.print("%");
+    
+    delay(4000);
   
-  float humidity = myHumidity.getRH();
-  lcd.setCursor(0,1);
-  lcd.print(humidity);
-  lcd.print("%");
+    //Read out pressure
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Pressure:");
   
-  delay(4000);
-
-  //Read out pressure
-  lcd.clear();
-  lcd.setCursor(0,0);
-  lcd.print("Pressure:");
-
-  lcd.setCursor(0,1);
-  float pressure = myPressure.readPressure();
-  lcd.print(pressure);
-  lcd.print(" Pa");
-
-  delay(4000);
+    lcd.setCursor(0,1);
+    float pressure = myPressure.readPressure();
+    lcd.print(pressure);
+    lcd.print(" Pa");
   
-  //Read out light level
-  lcd.clear();
-  lcd.setCursor(0,0);
-  lcd.print("Light Level");
-
-  lcd.setCursor(0,1);
-  float light_lvl = get_light_level();
-  lcd.print(light_lvl);
-  lcd.print(" V");
+    delay(4000);
+    
+    //Read out light level
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Light Level");
   
-  delay(4000);
+    lcd.setCursor(0,1);
+    float light_lvl = get_light_level();
+    lcd.print(light_lvl);
+    lcd.print(" V");
+    
+    delay(4000);
 
   }
 

@@ -26,4 +26,4 @@ The Sparkfun RedBoard Pinout is as follows:
 | 10  | None                  |
 | 11  | LCD                   |
 | 12  | LCD                   |
-| 13  | IR Sensor             |
+| 13  | SD Shield CLK         |
