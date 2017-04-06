@@ -21,9 +21,9 @@ The Sparkfun RedBoard Pinout is as follows:
 | 5   | LCD                   |
 | 6   | Motor R               |
 | 7   | Motor L               |
-| 8   | None                  |
-| 9   | None                  |
-| 10  | None                  |
-| 11  | LCD                   |
-| 12  | LCD                   |
+| 8   | Scoop Servo           |
+| 9   | IR Sensor             |
+| 10  | SD Shield CS          |
+| 11  | SD Shield DI          |
+| 12  | SD Shield DO          |
 | 13  | SD Shield CLK         |
