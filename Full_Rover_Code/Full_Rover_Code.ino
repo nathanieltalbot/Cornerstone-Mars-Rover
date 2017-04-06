@@ -7,15 +7,13 @@ Northeastern University, Boston, MA
 
 //This code is a modification of the original sensor code to include the IR sensor and servo motors for the robot
 
-
 //INCLUDED LIBRARIES
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 #include <Wire.h> //I2C for sensors
 #include "SparkFunMPL3115A2.h"  //Pressure Sensor
 #include "SparkFun_Si7021_Breakout_Library.h" //Humidity Sensor
 
-
-#include <LiquidCrystal.h>  //library for LCD
+//#include <LiquidCrystal.h>  //library for LCD
 
 #include <Servo.h>  //library for servo motors to move the robot
 
@@ -25,27 +23,22 @@ Northeastern University, Boston, MA
 #include <IRremoteInt.h>
 #include <ir_Lego_PF_BitStreamEncoder.h>
 
+#include <SD.h>
 
 MPL3115A2 myPressure;   //instance of pressure sensor
 Weather myHumidity;     //instance of humidity sensor
-
-//ALL PIN DEFINITIONS
-//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-//const byte STAT_BLUE = 7;
-//const byte STAT_GREEN = 8;
 
 const byte REFERENCE_3V3 = A3;
 const byte LIGHT = A1;
 
 int mq3_analogPin = A0;   //A0 is the analog pin for the MQ-3 Sensor
 
-int RECV_PIN = 8;     //Pin for IR Sensor
-
-LiquidCrystal lcd(12,11,5,4,3,2);
+int RECV_PIN = 9;     //Pin for IR Sensor
 
 //declare servo objects
 Servo servo_R;
 Servo servo_L;
+Servo scoop;
 
 //Set up IR Receiver
 IRrecv irrecv(RECV_PIN);
@@ -55,21 +48,17 @@ decode_results results;
 // GLOBAL VARIABLES
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 long previousMillis = 0;  //Stores last time sensors were used
-
 long interval = 10000;  //interval for reading data, 10 seconds
 
-
-/*
-THIS CODE IS INACTIVE, AS IT RELIES ON THE IR SENSOR'S VALUES TO WORK
-PLAY ##   //IR value for play, moves rover forward
-REW ##    //IR value for rewind, turns rover left
-FF ##     //IR value for fast forward, turs rover right
-PAUSE ##  //IR value for pause, moves rover backward
-STOP ##   //IR value stop, stops rover
-*/
+//IR Values for RCA Remote
+FWD 2064   //IR value for #2, moves rover forward
+LEFT 16     //IR value for #1, turns rover left
+RIGHT 2040     //IR value for #3, turns rover right
+REV 528    //IR value for #5, reverses rover
+SCOOP_UP 3600   //IR value for #8, moves scoop up
+SCOOP_DOWN 2320 //IR value for #0, moves scoop down
 
 void setup() {
-  
 
   //Blue and green status LEDs
   //pinMode(STAT_BLUE, OUTPUT); 
@@ -87,21 +76,18 @@ void setup() {
   //Configure humidity sensor
   myHumidity.begin();
 
-
-  //Setup for the LCD Readout (Temporary for the 3/26 iteration of the prototype)
-  lcd.begin(16, 2);
-  lcd.clear();
-
   //Set up IR Receiver
   irrecv.enableIRIn(); 
   
   //Set up servo motors to pins
   servo_R.attach(6);
   servo_L.attach(7);
-  
-  lcd.setCursor(0,0);
-  lcd.print("Welcome!");
-  delay(1000);
+  scoop.attach(8);
+
+  //set up pin 10 as data output to the SD Card
+  pinmode(10, OUTPUT);
+
+  fid = SD.open("data.txt", FILE_WRITE);
 }
 
 //Loop function reads out alcohol, temperature, humidity, pressure, light level readings onto LCD
@@ -111,7 +97,7 @@ void loop() {
 
   //if statement 
   if (currentMillis - previousMillis > interval) {
-  
+    if (fid) {
     //Read out Alcohol Level
     int mq3_value = analogRead(mq3_analogPin);
     lcd.clear();
@@ -171,7 +157,47 @@ void loop() {
     lcd.print(" V");
     
     delay(4000);
+  }
+  }
 
+  if (irrecv.decode(&results)) {
+    switch (results.value){
+      //forward
+       case FWD:
+       servo_R.write (180);      
+       servo_L.write (0);
+    
+       break;
+      //left
+       case LEFT:
+       servo_R.write (0);      
+       servo_L.write (180);
+
+       break;
+      //right
+       case RIGHT:
+       servo_R.write (0);      
+       servo_L.write (0);
+
+       break;
+      //reverse
+       case REV:
+       servo_R.write (180);      
+       servo_L.write (180);
+
+       break;
+       //move scoop up
+       case SCOOP_UP:
+       servo_R.write (90);      
+       servo_L.write (90);
+
+       break;
+       //move scoop down
+       case SCOOP_DOWN:
+       //servo moves up
+       break;
+    } 
+      irrecv.resume(); // Receive the next value
   }
 
 }
