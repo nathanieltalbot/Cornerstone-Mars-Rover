@@ -62,10 +62,15 @@ File myFile;
 
 void setup() {
 
-  //Blue and green status LEDs
-  //pinMode(STAT_BLUE, OUTPUT); 
-  //pinMode(STAT_GREEN, OUTPUT); 
+  Serial.begin(9600);
+  Serial.print("Initializing SD card...");
 
+  if (!SD.begin(10)) {
+    Serial.println("initialization failed!");
+    return;
+  }
+  Serial.println("initialization done.");
+  
   pinMode(REFERENCE_3V3, INPUT);  //Reference voltage input
   pinMode(LIGHT, INPUT);  //Light Sensor input
 
@@ -89,64 +94,54 @@ void setup() {
   //set up pin 10 as data output to the SD Card
   pinMode(10, OUTPUT);
 
-  myFile = SD.open("data.txt", FILE_WRITE);
+  myFile = SD.open("Weather.txt", FILE_WRITE);
 
-      if (myFile) {
-      //Read out Alcohol Level
-      int mq3_value = analogRead(mq3_analogPin);
-      myFile.println(mq3_value);
-      
-      //Read out Temperature
-      float temp_h = myHumidity.getTempF();
-      myFile.println(temp_h);
-      //Read out humidity
-      
-      float humidity = myHumidity.getRH();
-      myFile.println(humidity);
-      
-      //Read out pressure
-      float pressure = myPressure.readPressure();
-      myFile.println(pressure);
-      
-      //Read out light level
-      float light_lvl = get_light_level();
-      myFile.println(light_lvl);
-      }
-  myFile.close();
+  myFile.println("Alcohol\tTemp\tHumidity\tPressure\tLight");
+ 
 }
-
+  
 //Loop function reads out alcohol, temperature, humidity, pressure, light level readings onto LCD
 void loop() {
-  /*
+  
   int count;
   unsigned long currentMillis = millis();   //read current time
 
   //if statement 
   if (currentMillis - previousMillis > interval) {
+      previousMillis = currentMillis;
     if (myFile) {
+      Serial.print("Writing to weather.txt...");
       //Read out Alcohol Level
       int mq3_value = analogRead(mq3_analogPin);
-      myFile.println(mq3_value);
+      myFile.print(mq3_value);
+      myFile.print("\t\t\t");
       
       //Read out Temperature
       float temp_h = myHumidity.getTempF();
-      myFile.println(temp_h);
-      //Read out humidity
+      myFile.print(temp_h);
+      myFile.print("\t");
       
+      //Read out humidity  
       float humidity = myHumidity.getRH();
-      myFile.println(humidity);
-      
+      myFile.print(humidity);
+      myFile.print("\t");
+        
       //Read out pressure
       float pressure = myPressure.readPressure();
-      myFile.println(pressure);
-      
+      myFile.print(pressure);
+      myFile.print("\t");
+        
       //Read out light level
       float light_lvl = get_light_level();
-      myFile.println(light_lvl);
-
-      count += 1;
-  }
-  }
+      myFile.print(light_lvl);
+      myFile.print("\n");
+      Serial.println("done.");
+      myFile.flush();
+      
+        }
+      }
+    
+    
 
   if (irrecv.decode(&results)) {
     switch (results.value){
@@ -187,7 +182,8 @@ void loop() {
     } 
       irrecv.resume(); // Receive the next value
   }
-  */
+  
+  
 }
 
 //Function for the light level sensor
