@@ -51,12 +51,14 @@ long previousMillis = 0;  //Stores last time sensors were used
 long interval = 10000;  //interval for reading data, 10 seconds
 
 //IR Values for RCA Remote
-FWD 2064   //IR value for #2, moves rover forward
-LEFT 16     //IR value for #1, turns rover left
-RIGHT 2040     //IR value for #3, turns rover right
-REV 528    //IR value for #5, reverses rover
-SCOOP_UP 3600   //IR value for #8, moves scoop up
-SCOOP_DOWN 2320 //IR value for #0, moves scoop down
+#define FWD 2064   //IR value for #2, moves rover forward
+#define LEFT 16     //IR value for #1, turns rover left
+#define RIGHT 2040     //IR value for #3, turns rover right
+#define REV 528    //IR value for #5, reverses rover
+#define SCOOP_UP 3600   //IR value for #8, moves scoop up
+#define SCOOP_DOWN 2320 //IR value for #0, moves scoop down
+
+File myFile;
 
 void setup() {
 
@@ -85,78 +87,64 @@ void setup() {
   scoop.attach(8);
 
   //set up pin 10 as data output to the SD Card
-  pinmode(10, OUTPUT);
+  pinMode(10, OUTPUT);
 
-  fid = SD.open("data.txt", FILE_WRITE);
+  myFile = SD.open("data.txt", FILE_WRITE);
+
+      if (myFile) {
+      //Read out Alcohol Level
+      int mq3_value = analogRead(mq3_analogPin);
+      myFile.println(mq3_value);
+      
+      //Read out Temperature
+      float temp_h = myHumidity.getTempF();
+      myFile.println(temp_h);
+      //Read out humidity
+      
+      float humidity = myHumidity.getRH();
+      myFile.println(humidity);
+      
+      //Read out pressure
+      float pressure = myPressure.readPressure();
+      myFile.println(pressure);
+      
+      //Read out light level
+      float light_lvl = get_light_level();
+      myFile.println(light_lvl);
+      }
+  myFile.close();
 }
 
 //Loop function reads out alcohol, temperature, humidity, pressure, light level readings onto LCD
 void loop() {
-
+  /*
+  int count;
   unsigned long currentMillis = millis();   //read current time
 
   //if statement 
   if (currentMillis - previousMillis > interval) {
-    if (fid) {
-    //Read out Alcohol Level
-    int mq3_value = analogRead(mq3_analogPin);
-    lcd.clear();
-    lcd.setCursor(0,0);
-    lcd.print("Alcohol Level");
-  
-    lcd.setCursor(0,1);
-  
-    lcd.print(mq3_value);
-  
-    delay(4000);
-  
-    //Read out Temperature
-    lcd.clear();
-    lcd.setCursor(0,0);
-    lcd.print("Temperature");
-  
-    lcd.setCursor(0,1);
-    float temp_h = myHumidity.getTempF();
-    lcd.print(temp_h, 2);
-    lcd.print(" F");
-    
-    delay(4000);
-  
-    //Read out humidity
-    lcd.clear();
-    lcd.setCursor(0,0);
-    lcd.print("Humidity:");
-    
-    float humidity = myHumidity.getRH();
-    lcd.setCursor(0,1);
-    lcd.print(humidity);
-    lcd.print("%");
-    
-    delay(4000);
-  
-    //Read out pressure
-    lcd.clear();
-    lcd.setCursor(0,0);
-    lcd.print("Pressure:");
-  
-    lcd.setCursor(0,1);
-    float pressure = myPressure.readPressure();
-    lcd.print(pressure);
-    lcd.print(" Pa");
-  
-    delay(4000);
-    
-    //Read out light level
-    lcd.clear();
-    lcd.setCursor(0,0);
-    lcd.print("Light Level");
-  
-    lcd.setCursor(0,1);
-    float light_lvl = get_light_level();
-    lcd.print(light_lvl);
-    lcd.print(" V");
-    
-    delay(4000);
+    if (myFile) {
+      //Read out Alcohol Level
+      int mq3_value = analogRead(mq3_analogPin);
+      myFile.println(mq3_value);
+      
+      //Read out Temperature
+      float temp_h = myHumidity.getTempF();
+      myFile.println(temp_h);
+      //Read out humidity
+      
+      float humidity = myHumidity.getRH();
+      myFile.println(humidity);
+      
+      //Read out pressure
+      float pressure = myPressure.readPressure();
+      myFile.println(pressure);
+      
+      //Read out light level
+      float light_lvl = get_light_level();
+      myFile.println(light_lvl);
+
+      count += 1;
   }
   }
 
@@ -199,7 +187,7 @@ void loop() {
     } 
       irrecv.resume(); // Receive the next value
   }
-
+  */
 }
 
 //Function for the light level sensor
