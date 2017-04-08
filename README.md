@@ -15,10 +15,10 @@ The Sparkfun RedBoard Pinout is as follows:
 | A3  | 3V3 Reference         |
 | A4  | None                  |
 | A5  | None                  |
-| 2   | LCD                   |
-| 3   | LCD                   |
-| 4   | LCD                   |
-| 5   | LCD                   |
+| 2   | None                  |
+| 3   | None                  |
+| 4   | None                  |
+| 5   | None                  |
 | 6   | Motor R               |
 | 7   | Motor L               |
 | 8   | Scoop Servo           |
