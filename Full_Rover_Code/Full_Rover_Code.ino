@@ -57,6 +57,7 @@ long interval = 10000;  //interval for reading data, 10 seconds
 #define REV 528    //IR value for #5, reverses rover
 #define SCOOP_UP 3600   //IR value for #8, moves scoop up
 #define SCOOP_DOWN 2320 //IR value for #0, moves scoop down
+#define STOP 272  //IR value for #9, stops rover
 
 File myFile;
 
@@ -147,37 +148,42 @@ void loop() {
     switch (results.value){
       //forward
        case FWD:
-       servo_R.write (180);      
-       servo_L.write (0);
+       servo_R.write (0);      
+       servo_L.write (180);
     
        break;
       //left
        case LEFT:
        servo_R.write (0);      
-       servo_L.write (180);
+       servo_L.write (0);
 
        break;
       //right
        case RIGHT:
-       servo_R.write (0);      
-       servo_L.write (0);
+       servo_R.write (180);      
+       servo_L.write (180);
 
        break;
       //reverse
        case REV:
        servo_R.write (180);      
-       servo_L.write (180);
+       servo_L.write (0);
 
        break;
        //move scoop up
        case SCOOP_UP:
-       servo_R.write (90);      
-       servo_L.write (90);
-
+       scoop.write(180);      
        break;
+       
        //move scoop down
        case SCOOP_DOWN:
-       //servo moves up
+       scoop.write(0);
+       break;
+
+       case STOP:
+       servo_R.write(90);
+       servo_L.write(90);
+       scoop.write(90);
        break;
     } 
       irrecv.resume(); // Receive the next value
