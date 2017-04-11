@@ -53,7 +53,7 @@ long interval = 10000;  //interval for reading data, 10 seconds
 //IR Values for RCA Remote
 #define FWD 2064   //IR value for #2, moves rover forward
 #define LEFT 16     //IR value for #1, turns rover left
-#define RIGHT 2040     //IR value for #3, turns rover right
+#define RIGHT 1040     //IR value for #3, turns rover right
 #define REV 528    //IR value for #5, reverses rover
 #define SCOOP_UP 3600   //IR value for #8, moves scoop up
 #define SCOOP_DOWN 2320 //IR value for #0, moves scoop down
