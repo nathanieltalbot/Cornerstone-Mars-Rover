@@ -33,13 +33,8 @@ LiquidCrystal lcd(12,11,5,4,3,2);
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 long lastSecond;  //Millisecond counter to see when a second goes by
 
-
-
-
-
 void setup() {
   
-
   //Blue and green status LEDs
   //pinMode(STAT_BLUE, OUTPUT); 
   //pinMode(STAT_GREEN, OUTPUT); 
