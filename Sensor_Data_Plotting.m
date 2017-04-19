@@ -1,4 +1,4 @@
-%Nathaniel Talbt
+%Nathaniel Talbot
 %GE 1502 Cornerstone of Engineering 2
 %This program will create plots of weather and alcohol sensor data
 %collected by the Mars Rover project
@@ -13,7 +13,7 @@ fig_humid = figure('Name', 'Humidity');
 fig_pressure = figure('Name', 'Pressure');
 fig_light = figure('Name', 'Light');
 
-%calcluate number of rows in the array, for the range
+%calculate number of rows in the array, for the range
 file_size = size(weather,1)
 
 %create range from length of the file
